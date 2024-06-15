@@ -1,7 +1,12 @@
 package com.healthycoderapp;
 
+import com.sun.jdi.Value;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +15,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BMICalculatorTest {
 
-    @Test
-    void should_ReturnTrue_WhenDietRecommended(){
+    @ParameterizedTest(name = "weight:{0},height:{1}")
+    @CsvFileSource(resources ="/diet-recommended-input-data.csv",numLinesToSkip = 1)
+    void should_ReturnTrue_WhenDietRecommended(double weightValue, double heightvalue){
         //given
-        double weight = 89.0;
-        double height = 1.72;
+        double weight = weightValue;
+        double height = heightvalue;
         //when
         boolean recommended = BMICalculator.isDietRecommended(weight,height);
         //then
-        assertTrue(recommended);
-    }
+        assertTrue(recommended, String.format("Diet is not recommended for weight: %.2f and height: %.2f", weight, height));    }
 @Test
     void  should_ReturnFalse_WhenDietNotRecommended(){
         double weight = 50;
